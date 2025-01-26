@@ -1,8 +1,10 @@
 # hp-trackpoint-sdk
+
 埋点SDK
 
 #### 目录结构
 
+```
 /hp-trackpoint-sdk
 ├── /packages
 │   ├── /core                    # 核心模块，包含与平台无关的公共逻辑
@@ -37,3 +39,14 @@
 ├── /dist                         # 编译后的输出目录
 ├── /public                       # 公共资源目录（如果有）
 └── package.json                  # SDK的包管理与配置
+```
+
+#### 开发规范
+
+- 使用 `pnpm` 作为包管理工具
+- 使用 `husky` 进行代码提交规范检查
+- 使用 `commitlint` 进行提交信息格式化
+
+---
+
+正在完善中...
