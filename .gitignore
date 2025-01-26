@@ -1,0 +1,40 @@
+# 依赖目录
+node_modules
+**/node_modules
+
+# 构建输出
+dist
+**/dist
+
+# 日志文件
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# IDE相关
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# 环境变量
+.env
+.env.*
+
+# 操作系统文件
+.DS_Store
+Thumbs.db
+
+# 锁文件（如果你想把它们也忽略的话）
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# TypeScript 缓存
+*.tsbuildinfo
+.tscache

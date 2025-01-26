@@ -1,0 +1,57 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    devDependencies:
+      typescript:
+        specifier: ^5.0.0
+        version: 5.7.3
+
+  packages/core:
+    devDependencies:
+      typescript:
+        specifier: ^5.0.0
+        version: 5.7.3
+
+  packages/node:
+    dependencies:
+      '@tracking-sdk/core':
+        specifier: workspace:*
+        version: link:../core
+
+  packages/plugins:
+    dependencies:
+      '@tracking-sdk/core':
+        specifier: workspace:*
+        version: link:../core
+
+  packages/react:
+    dependencies:
+      '@tracking-sdk/core':
+        specifier: workspace:*
+        version: link:../core
+      '@tracking-sdk/web':
+        specifier: workspace:*
+        version: link:../web
+
+  packages/web:
+    dependencies:
+      '@tracking-sdk/core':
+        specifier: workspace:*
+        version: link:../core
+
+packages:
+
+  typescript@5.7.3:
+    resolution: {integrity: sha512-84MVSjMEHP+FQRPy3pX9sTVV/INIex71s9TL2Gm5FG/WG1SqXeKyZ0k7/blY/4FdOzI12CBy1vGc4og/eus0fw==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+
+snapshots:
+
+  typescript@5.7.3: {}
