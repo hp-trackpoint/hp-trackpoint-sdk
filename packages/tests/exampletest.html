@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- 引入SDK的打包JS文件 -->
+    <script src="../core/src/index.ts"></script>  <!-- 引入SDK核心文件 -->
+    <script src="../plugins/src/examplePlugin.ts"></script>  
+</head>
+<body>
+    <h1>Welcome to SDK Example</h1>
+    <!-- ts文件需要被转换为 JavaScript 后才能在浏览器中执行，这里仅仅只是做一个示范 -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // 初始化 SDK
+            const options = {
+                debug:true,
+                plugins: [examplePlugin]  // 传入插件列表
+            };
+
+            sdkCore.init(options);  // 初始化 SDK 并传入插件
+        });
+    </script>
+</body>
+</html>
