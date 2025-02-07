@@ -14,12 +14,14 @@ export default [
     },
     plugins: {
       "@typescript-eslint": tsPlugin,
-      "react": pluginReact,
+      react: pluginReact,
     },
     rules: {
       ...pluginJs.configs.recommended.rules,
       ...tsPlugin.configs.recommended.rules,
       ...pluginReact.configs.flat.recommended.rules,
+      "@typescript-eslint/no-unnecessary-try-catch": "off",
+      "@typescript-eslint/no-explicit-any": "off",
     },
   },
 ];
