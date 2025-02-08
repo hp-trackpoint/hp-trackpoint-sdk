@@ -22,6 +22,7 @@ export default [
       ...pluginReact.configs.flat.recommended.rules,
       "@typescript-eslint/no-unnecessary-try-catch": "off",
       "@typescript-eslint/no-explicit-any": "off",
+      "no-unused-expressions": "off",
     },
   },
 ];

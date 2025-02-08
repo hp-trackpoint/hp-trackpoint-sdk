@@ -1,10 +1,12 @@
+import type { SDKENVIRONMENT } from "./common";
+type DeviceType = "desktop" | "mobile" | "unknown";
 export interface DeviceInfo {
   device_id: string;
   os: string;
   os_version: string;
   browser: string;
   browser_version: string;
-  device_type: string;
+  device_type: DeviceType;
   region: string;
   clientHeight: number;
   clientWidth: number; // 网页可见区宽度
@@ -24,7 +26,7 @@ interface ExtraInfo {
 }
 // 定义整个数据对象的类型
 export interface EventData {
-  environment: string; // TODO 待枚举
+  environment: SDKENVIRONMENT; // TODO 待枚举
   event_name: string;
   event_time: number;
   user_id: number;
