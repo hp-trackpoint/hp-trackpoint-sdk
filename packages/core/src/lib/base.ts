@@ -1,9 +1,9 @@
 // import { DEVICE_KEY, SDK_VERSION } from '../common'
-import { _support } from '../utils/global'
-import { uuid } from '../utils/index'
-import { options } from './options'
-import { computed } from '../utils/reactivity'
-import type { Ref } from '../utils/reactivity'
+import { _support } from "../utils/global";
+import { uuid } from "../utils/index";
+import { options } from "./options";
+import { computed } from "../utils/reactivity";
+import type { Ref } from "../utils/reactivity";
 
 interface DeviceInfo {
   os: string;
@@ -15,23 +15,23 @@ interface DeviceInfo {
 }
 
 interface Base extends DeviceInfo {
-  user_id: string
-  sdkUserUuid: string
-  appName: string
-  appCode: string
-  pageId: string
+  user_id: string;
+  sdkUserUuid: string;
+  appName: string;
+  appCode: string;
+  pageId: string;
   // sdkVersion: string
-  ip: string
+  ip: string;
 }
 
 export class BaseInfo {
-  public base: Ref<Base>
-  public pageId: string = uuid()
-  private sdkUserUuid: string = 'unit-test-id'
-  private device: DeviceInfo
+  public base: Ref<Base>;
+  public pageId: string = uuid();
+  private sdkUserUuid: string = "unit-test-id";
+  private device: DeviceInfo;
 
   constructor() {
-    this.device = this.initDevice()
+    this.device = this.initDevice();
 
     this.base = computed<Base>(() => ({
       ...this.device,
@@ -41,22 +41,22 @@ export class BaseInfo {
       appCode: options.value.appCode,
       pageId: this.pageId,
       // sdkVersion: SDK_VERSION,
-      ip: ''
-    }))
+      ip: "",
+    }));
 
-    options.value.sdkUserUuid = this.sdkUserUuid
-    this.reportInit() // 可添加上报逻辑
+    options.value.sdkUserUuid = this.sdkUserUuid;
+    this.reportInit(); // 可添加上报逻辑
   }
 
   private initDevice(): DeviceInfo {
     return {
-      os: navigator.platform || 'unknown',
-      os_version: navigator.userAgent || 'unknown',
-      browser: navigator.vendor || 'unknown',
-      browser_version: navigator.userAgent || 'unknown',
-      device_type: 'unknown',
-      region: 'unknown'
-    }
+      os: navigator.platform || "unknown",
+      os_version: navigator.userAgent || "unknown",
+      browser: navigator.vendor || "unknown",
+      browser_version: navigator.userAgent || "unknown",
+      device_type: "unknown",
+      region: "unknown",
+    };
   }
 
   private reportInit() {
@@ -64,10 +64,9 @@ export class BaseInfo {
     // 例如transport要构建空的事件队列
   }
 }
-
-export let baseInfo: BaseInfo
+export let baseInfo: BaseInfo;
 
 export function initBase() {
-  baseInfo = new BaseInfo()
-  _support.baseInfo = baseInfo
+  baseInfo = new BaseInfo();
+  _support.baseInfo = baseInfo;
 }

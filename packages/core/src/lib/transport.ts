@@ -1,11 +1,10 @@
 // 数据上报相关的代码
-import { type EventData } from "../types";
-import { _support, _global } from '../utils/global'
-
+import { type EventData } from "./types";
+import { _support } from "./utils/global";
 // 数据上报的配置类型定义
 interface TransportConfig {
   url: string;
-  method?: 'POST' | 'BEACON';
+  method?: "POST" | "BEACON";
   // 重试次数
   retry?: number;
   // 批量发送的数量
@@ -22,12 +21,12 @@ export class Transport {
 
   constructor(config: TransportConfig) {
     this.config = {
-      method: 'POST',
+      method: "POST",
       retry: 3,
       batchSize: 5,
       debounceTime: 1000,
-      ...config
-    }
+      ...config,
+    };
   }
 
   /**
@@ -50,7 +49,7 @@ export class Transport {
       await this.doSend(transport);
     } catch (error) {
       // 如果上报失败，记录错误
-      console.error('Send failed:', error);
+      console.error("Send failed:", error);
     }
   }
 
@@ -67,22 +66,22 @@ export class Transport {
    */
   private async doSend(data: EventData[], retryCount = 0): Promise<void> {
     // 根据配置选择发送方式
-    const { method,retry } = this.config;
+    const { method, retry } = this.config;
     try {
       switch (method) {
-        case 'POST':
+        case "POST":
           await this.sendByXHR(data);
           break;
-        case 'BEACON':
+        case "BEACON":
           await this.sendByBeacon(data);
           break;
       }
     } catch (error) {
       // TODO 如果发送失败且未达到重试次数上限，进行重试
-      // if (retryCount < retry) {
-      //   await new Promise(res => setTimeout(res, 1000 * (retryCount + 1)));
-      //   return this.doSend(data, retryCount + 1);
-      // }
+      if (retryCount < retry) {
+        await new Promise((res) => setTimeout(res, 1000 * (retryCount + 1)));
+        return this.doSend(data, retryCount + 1);
+      }
       // 达到重试次数上限后，抛出错误
       throw error;
     }
@@ -93,11 +92,11 @@ export class Transport {
    */
   private sendByXHR(data: EventData[]): Promise<void> {
     return new Promise((resolve, reject) => {
-      console.log('send by xhr');
-      
+      console.log("send by xhr");
+
       const xhr = new XMLHttpRequest();
       xhr.open(this.config.method, this.config.url);
-      xhr.setRequestHeader('Content-Type', 'application/json');
+      xhr.setRequestHeader("Content-Type", "application/json");
 
       xhr.onload = () => {
         if (xhr.status >= 200 && xhr.status < 300) {
@@ -105,14 +104,14 @@ export class Transport {
         } else {
           reject(new Error(`XHR failed with status ${xhr.status}`));
         }
-      }
+      };
 
       xhr.onerror = () => {
-        reject(new Error('XHR failed'));
-      }
+        reject(new Error("XHR failed"));
+      };
 
       xhr.send(JSON.stringify(data));
-    })
+    });
   }
 
   /**
@@ -122,30 +121,37 @@ export class Transport {
     const { url } = this.config;
     return new Promise((resolve, reject) => {
       if (navigator.sendBeacon) {
-        console.log('send by beacon');  
-        
+        console.log("send by beacon");
+
         const isSuccess = navigator.sendBeacon(url, JSON.stringify(data));
         if (isSuccess) {
           resolve();
         } else {
-          reject(new Error('Beacon failed'));
+          reject(new Error("Beacon failed"));
         }
       } else {
-        reject(new Error('Beacon is not supported'));
+        reject(new Error("Beacon is not supported"));
       }
-    })
+    });
   }
-
 }
-export let transport: Transport
+// by ls,创建一个Transport实例
+export let transport: Transport;
+export function initSendData() {
+  _support.sendData = new Transport({
+    url: "62.234.16.19",
+  });
+  transport = _support.sendData;
+}
+export let transport: Transport;
 
 export function initTransport() {
   _support.transport = new Transport({
-    url: 'https://your-api.com/track', // 这里要修改,initTransport要初始化一个空的transport对象
-    method: 'POST', // 或 'BEACON'
+    url: "https://your-api.com/track", // 这里要修改,initTransport要初始化一个空的transport对象
+    method: "POST", // 或 'BEACON'
     retry: 3,
     batchSize: 5,
-    debounceTime: 1000
-  })
-  transport = _support.transport
+    debounceTime: 1000,
+  });
+  transport = _support.transport;
 }

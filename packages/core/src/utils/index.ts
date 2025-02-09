@@ -1,7 +1,7 @@
-import { AnyFun, AnyObj } from '../optionType'
-import { logError } from './debug'
-import { isRegExp, isArray, isFunction, isNumber } from './is'
-import { isInit } from './global'
+import { AnyFun, AnyObj } from "../optionType";
+import { logError } from "./debug";
+import { isRegExp, isArray, isFunction, isNumber } from "./is";
+import { isInit } from "./global";
 
 // /**
 //  * 添加事件监听器
@@ -71,7 +71,7 @@ import { isInit } from './global'
  * @returns 当前的时间戳
  */
 export function getTimestamp(): number {
-  return Date.now()
+  return Date.now();
 }
 
 // /**
@@ -150,23 +150,23 @@ export function getTimestamp(): number {
  * 深度合并对象
  */
 export function deepAssign<T>(target: AnyObj, ...sources: AnyObj[]) {
-  sources.forEach(source => {
+  sources.forEach((source) => {
     for (const key in source) {
       if (source[key] !== null && isRegExp(source[key])) {
-        target[key] = source[key]
-      } else if (source[key] !== null && typeof source[key] === 'object') {
+        target[key] = source[key];
+      } else if (source[key] !== null && typeof source[key] === "object") {
         // 如果当前 key 对应的值是一个对象或数组，则进行递归
         target[key] = deepAssign(
           target[key] || (isArray(source[key]) ? [] : {}),
           source[key]
-        )
+        );
       } else {
         // 如果当前 key 对应的值是基本类型数据，则直接赋值
-        target[key] = source[key]
+        target[key] = source[key];
       }
     }
-  })
-  return target as T
+  });
+  return target as T;
 }
 
 /**
@@ -176,10 +176,10 @@ export function deepAssign<T>(target: AnyObj, ...sources: AnyObj[]) {
  */
 export function validateMethods(methodsName: string): boolean {
   if (!isInit()) {
-    logError(`${methodsName} 需要在SDK初始化之后使用`)
-    return false
+    logError(`${methodsName} 需要在SDK初始化之后使用`);
+    return false;
   }
-  return true
+  return true;
 }
 
 /**
@@ -188,7 +188,7 @@ export function validateMethods(methodsName: string): boolean {
  * @returns 类型
  */
 export function typeofAny(target: any): string {
-  return Object.prototype.toString.call(target).slice(8, -1).toLowerCase()
+  return Object.prototype.toString.call(target).slice(8, -1).toLowerCase();
 }
 
 /**
@@ -201,7 +201,7 @@ export function isValidKey(
   key: string | number | symbol,
   object: object
 ): key is keyof typeof object {
-  return key in object
+  return key in object;
 }
 
 // /**
@@ -220,23 +220,23 @@ export function isValidKey(
  * @param {*} placeholder 补全的值
  * @returns 补全后的值
  */
-export function pad(num: number, len: number, placeholder = '0') {
-  const str = String(num)
+export function pad(num: number, len: number, placeholder = "0") {
+  const str = String(num);
   if (str.length < len) {
-    let result = str
+    let result = str;
     for (let i = 0; i < len - str.length; i += 1) {
-      result = placeholder + result
+      result = placeholder + result;
     }
-    return result
+    return result;
   }
-  return str
+  return str;
 }
 
 /**
  * 获取一个随机字符串
  */
 export function uuid() {
-  const date = new Date()
+  const date = new Date();
 
   // yyyy-MM-dd的16进制表示,7位数字
   const hexDate = parseInt(
@@ -245,7 +245,7 @@ export function uuid() {
       2
     )}`,
     10
-  ).toString(16)
+  ).toString(16);
 
   // hh-mm-ss-ms的16进制表示，最大也是7位
   const hexTime = parseInt(
@@ -254,18 +254,18 @@ export function uuid() {
       2
     )}${pad(date.getMilliseconds(), 3)}`,
     10
-  ).toString(16)
+  ).toString(16);
 
   // 第8位数字表示后面的time字符串的长度
-  let guid = hexDate + hexTime.length + hexTime
+  let guid = hexDate + hexTime.length + hexTime;
 
   // 补充随机数，补足32位的16进制数
   while (guid.length < 32) {
-    guid += Math.floor(Math.random() * 16).toString(16)
+    guid += Math.floor(Math.random() * 16).toString(16);
   }
 
   // 分为三段，前两段包含时间戳信息
-  return `${guid.slice(0, 8)}-${guid.slice(8, 16)}-${guid.slice(16)}`
+  return `${guid.slice(0, 8)}-${guid.slice(8, 16)}-${guid.slice(16)}`;
 }
 
 // /**
@@ -485,25 +485,168 @@ export function uuid() {
  * @return 深拷贝后的对象
  */
 export function deepCopy<T>(target: T, map = new Map()) {
-  if (target !== null && typeof target === 'object') {
-    let res = map.get(target)
-    if (res) return res
+  if (target !== null && typeof target === "object") {
+    let res = map.get(target);
+    if (res) return res;
     if (target instanceof Array) {
-      res = []
-      map.set(target, res)
+      res = [];
+      map.set(target, res);
       target.forEach((item, index) => {
-        res[index] = deepCopy(item, map)
-      })
+        res[index] = deepCopy(item, map);
+      });
     } else {
-      res = {}
-      map.set(target, res)
-      Object.keys(target).forEach(key => {
+      res = {};
+      map.set(target, res);
+      Object.keys(target).forEach((key) => {
         if (isValidKey(key, target)) {
-          res[key] = deepCopy(target[key], map)
+          res[key] = deepCopy(target[key], map);
         }
-      })
+      });
     }
-    return res
+    return res;
   }
-  return target
+  return target;
+}
+// 使用正则获取浏览器名称和版本
+export function getBrowserInfo() {
+  const ua = navigator.userAgent.toLocaleLowerCase();
+  let browserType = "null";
+  let browserVersion = "null";
+
+  if (ua.match(/msie/) != null || ua.match(/trident/) != null) {
+    browserType = "IE";
+    const matches = ua.match(/(msie\s|rv:)([\d.]+)/);
+    browserVersion = matches ? matches[2] : "null";
+  } else if (ua.match(/firefox/) != null) {
+    browserType = "firefox";
+    const matches = ua.match(/firefox\/([\d.]+)/);
+    browserVersion = matches ? matches[1] : "null";
+  } else if (ua.match(/ucbrowser/) != null) {
+    browserType = "UC";
+    const matches = ua.match(/ucbrowser\/([\d.]+)/);
+    browserVersion = matches ? matches[1] : "null";
+  } else if (ua.match(/opera/) != null || ua.match(/opr/) != null) {
+    browserType = "opera";
+    const matches = ua.match(/(?:opera|opr)[\s/]([\d.]+)/);
+    browserVersion = matches ? matches[1] : "null";
+  } else if (ua.match(/bidubrowser/) != null) {
+    browserType = "baidu";
+    const matches = ua.match(/bidubrowser[\s/]([\d.]+)/);
+    browserVersion = matches ? matches[1] : "null";
+  } else if (ua.match(/metasr/) != null) {
+    browserType = "sougou";
+    const matches = ua.match(/metasr[\s/]([\d.]+)/);
+    browserVersion = matches ? matches[1] : "null";
+  } else if (
+    ua.match(/tencenttraveler/) != null ||
+    ua.match(/qqbrowse/) != null
+  ) {
+    browserType = "QQ";
+    const matches = ua.match(
+      /(?:tencenttraveler|qqbrowserlite|qqbrowser)[/]([\d.]+)/
+    );
+    browserVersion = matches ? matches[1] : "null";
+  } else if (ua.match(/maxthon/) != null) {
+    browserType = "maxthon";
+    const matches = ua.match(/maxthon\/([\d.]+)/);
+    browserVersion = matches ? matches[1] : "null";
+  } else if (ua.match(/chrome/) != null) {
+    browserType = "chrome";
+    const matches = ua.match(/chrome\/([\d.]+)/);
+    browserVersion = matches ? matches[1] : "null";
+  } else if (ua.match(/safari/) != null) {
+    browserType = "Safari";
+    const matches = ua.match(/version\/([\d.]+)/);
+    browserVersion = matches ? matches[1] : "null";
+  } else {
+    browserType = "others";
+  }
+  return [browserType, browserVersion];
+}
+export function getOsName() {
+  const ua = navigator.userAgent;
+  if (ua.includes("Mac")) return "MacOS";
+  if (ua.includes("Win")) return "Windows";
+  if (ua.includes("Linux")) return "Linux";
+  if (ua.includes("iPhone")) return "iOS";
+  if (ua.includes("Android")) return "Android";
+  return "Unknown";
+}
+export function getOSVersion(): string {
+  const ua = navigator.userAgent;
+  // Windows
+  const windowsMatch = ua.match(/Windows NT (\d+\.?\d*)/);
+  if (windowsMatch) {
+    const versions: { [key: string]: string } = {
+      "10.0": "Windows 10",
+      "6.3": "Windows 8.1",
+      "6.2": "Windows 8",
+      "6.1": "Windows 7",
+      "6.0": "Windows Vista",
+      "5.2": "Windows XP 64-bit",
+      "5.1": "Windows XP",
+    };
+    return versions[windowsMatch[1]] || `Windows NT ${windowsMatch[1]}`;
+  }
+
+  // macOS
+  const macMatch = ua.match(/Mac OS X (\d+[._]\d+[._]\d+)/);
+  if (macMatch) {
+    return `macOS ${macMatch[1].replace(/_/g, ".")}`;
+  }
+
+  // iOS
+  const iosMatch = ua.match(/OS (\d+[._]\d+[._]?\d*).*like Mac OS X/);
+  if (iosMatch) {
+    return `iOS ${iosMatch[1].replace(/_/g, ".")}`;
+  }
+
+  // Android
+  const androidMatch = ua.match(/Android (\d+\.?\d*\.?\d*)/);
+  if (androidMatch) {
+    return `Android ${androidMatch[1]}`;
+  }
+
+  return "Unknown OS Version";
+}
+export function getUserDeviceType(): "mobile" | "desktop" {
+  const ua = navigator.userAgent;
+  if (/Mobi|Android|iPhone|iPad|iPod/.test(ua)) {
+    return "mobile";
+  }
+  return "desktop";
+}
+
+export async function getUserLocation() {
+  try {
+    // 1. 获取 IP
+    const ips = await getIPs().IPv4(2000);
+    const publicIP = ips.find(
+      (ip: any) =>
+        !ip.match(/^(192\.168\.|169\.254\.|10\.|172\.(1[6-9]|2\d|3[01]))/)
+    );
+
+    if (!publicIP) {
+      throw new Error("No public IP found");
+    }
+
+    // 2. 调用 IP 地理位置 API
+    const response = await fetch(`https://ipapi.co/${publicIP}/json/`);
+    const data = await response.json();
+
+    return {
+      country: data.country_name,
+      region: data.region,
+      city: data.city,
+      latitude: data.latitude,
+      longitude: data.longitude,
+    };
+  } catch (error) {
+    console.error("Failed to get location:", error);
+    return {
+      country: "unknown",
+      region: "unknown",
+      city: "unknown",
+    };
+  }
 }
