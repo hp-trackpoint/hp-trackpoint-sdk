@@ -25,17 +25,17 @@ return isBoolean(val) && String(val) === 'false'
  * @param type
  */
 export const variableTypeDetection = {
-isNumber: isType('Number'),
-isString: isType('String'),
-isBoolean: isType('Boolean'),
-isNull: isType('Null'),
-isUndefined: isType('Undefined'),
-isSymbol: isType('Symbol'),
-isFunction: isType('Function'),
-isObject: isType('Object'),
-isArray: isType('Array'),
-isProcess: isType('process'),
-isWindow: isType('Window')
+    isNumber: isType('Number'),
+    isString: isType('String'),
+    isBoolean: isType('Boolean'),
+    isNull: isType('Null'),
+    isUndefined: isType('Undefined'),
+    isSymbol: isType('Symbol'),
+    isFunction: isType('Function'),
+    isObject: isType('Object'),
+    isArray: isType('Array'),
+    isProcess: isType('process'),
+    isWindow: isType('Window')
 }
 
 /**
