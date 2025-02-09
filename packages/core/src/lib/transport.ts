@@ -43,16 +43,24 @@ export class Transport {
    * 强制发送数据
    */
   private async flush(): Promise<void> {
-    const sendData = [...this.queue];
+    const transport = [...this.queue];
     this.queue = [];
     try {
-      await this.doSend(sendData);
+      await this.doSend(transport);
     } catch (error) {
       // 如果上报失败，记录错误
       console.error("Send failed:", error);
     }
   }
 
+  /**
+   * 记录需要发送的埋点数据
+   * @param data 需要发送的事件信息
+   * @param flush 是否立即发送
+   */
+  public emit(data: EventData) {
+    //构建eventlist
+  }
   /**
    * 实际发送数据的逻辑
    */
@@ -134,4 +142,16 @@ export function initSendData() {
     url: "62.234.16.19",
   });
   transport = _support.sendData;
+}
+export let transport: Transport;
+
+export function initTransport() {
+  _support.transport = new Transport({
+    url: "https://your-api.com/track", // 这里要修改,initTransport要初始化一个空的transport对象
+    method: "POST", // 或 'BEACON'
+    retry: 3,
+    batchSize: 5,
+    debounceTime: 1000,
+  });
+  transport = _support.transport;
 }
