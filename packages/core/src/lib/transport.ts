@@ -29,6 +29,14 @@ export class Transport {
     environment: "dev",
     userId: "",
     sdkVersion: "1.0.0",
+    deviceInfo: {
+      browser: "chrome",
+      os: "windows",
+      browserVersion: "1.0.0",
+      deviceType: "pc",
+      osVersion: "1.0.0",
+      region: "beijing",
+    },
   };
   /** 定时器 */
   private timer: ReturnType<typeof setTimeout> | null = null;
@@ -126,7 +134,7 @@ export class Transport {
       console.log("send by xhr");
 
       const xhr = new XMLHttpRequest();
-      xhr.open(this.config.method, this.config.url);
+      xhr.open("POST", this.config.url);
       xhr.setRequestHeader("Content-Type", "application/json");
 
       xhr.onload = () => {

@@ -82,7 +82,7 @@ export interface BaseInfo {
   /** 用户ID */
   userId: string;
   /** 设备信息对象 */
-  deviceInfo?: DeviceInfo;
+  deviceInfo: DeviceInfo;
   /** SDK版本号，例：1.0.0 */
   sdkVersion: string;
 }
