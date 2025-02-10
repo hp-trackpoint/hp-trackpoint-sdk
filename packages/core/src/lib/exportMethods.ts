@@ -1,47 +1,71 @@
-import type { InternalOptions } from '../optionType'
-import { options } from './options'
-import { _support } from '../utils/global'
-import { getIPs as _getIPs } from '../utils/getIps'
-import { validateMethods, deepCopy } from '../utils/index'
+import type { InternalOptions } from "../optionType";
+import { options } from "./options";
+import { _support } from "../utils/global";
+import { getIPs as _getIPs } from "../utils/getIps";
+import { validateMethods, deepCopy } from "../utils/index";
+import { transport } from "./transport";
+
+/**
+ * TODO 测试完可以删除
+ * 测试发送数据
+ * 直接在项目中调用此方法实现数据上报
+ */
+export const transportData = () => {
+  transport.send({
+    bid: "1",
+    cid: "home_page",
+    eventName: "home",
+    eventTime: Date.now(),
+    eventType: "page",
+    extraInfo: {
+      common: 1,
+      event: "home",
+    },
+    pageInfo: {
+      pageUrl: "http://localhost:3000/",
+      referrer: "http://localhost:3000/",
+    },
+  });
+};
 
 /**
  * 设置用户id
  * @param id 用户id
  */
 export function setUserUuid(id: string): void {
-  if (!validateMethods('setUserUuid')) return
+  if (!validateMethods("setUserUuid")) return;
 
-  options.value.user_id = id
+  options.value.user_id = id;
 }
 
 /**
  * 获取用户id（此id是手动设置的id）
  */
 export function getUserUuid(): string | void {
-  if (!validateMethods('getUserUuid')) return
+  if (!validateMethods("getUserUuid")) return;
 
-  return options.value.user_id
+  return options.value.user_id;
 }
 
 /**
  * 获取sdk中的用户id
  */
 export function getSDKUserUuid(): string | void {
-  if (!validateMethods('getSDKUserUuid')) return
+  if (!validateMethods("getSDKUserUuid")) return;
 
-  return options.value.sdkUserUuid
+  return options.value.sdkUserUuid;
 }
 
 /**
  * 获取在sdk中记录的所有基础的信息（包括硬件，地理位置等等）
  */
 export function getBaseInfo(): object | void {
-  if (!validateMethods('getBaseInfo')) return
+  if (!validateMethods("getBaseInfo")) return;
 
   return {
     ..._support.baseInfo.base,
-    user_id: options.value.user_id
-  }
+    user_id: options.value.user_id,
+  };
 }
 
 /**
@@ -49,5 +73,5 @@ export function getBaseInfo(): object | void {
  * 这个参数配置并不是入参配置，sdk内部的参数是整理过后的
  */
 export function getOptions(): InternalOptions {
-  return deepCopy(options.value)
+  return deepCopy(options.value);
 }

@@ -1,27 +1,51 @@
 // 数据上报相关的代码
-import { type EventData } from "./types";
-import { _support } from "./utils/global";
-// 数据上报的配置类型定义
+import { BaseInfo, RequestData, type EventInfo } from "../types";
+import { _support } from "../utils/global";
+
+/**
+ * 数据上报的配置类型定义
+ */
 interface TransportConfig {
+  /** 上报地址 */
   url: string;
-  method?: "POST" | "BEACON";
-  // 重试次数
+  /** 上报方式 */
+  method?: "XHR" | "BEACON";
+  /** 重试次数 */
   retry?: number;
-  // 批量发送的数量
+  /** 批量上报的数量 */
   batchSize?: number;
-  // 防抖时间
+  /** 防抖时间 */
   debounceTime?: number;
 }
 
+/**
+ * 数据上报的类定义
+ */
 export class Transport {
-  // ... 数据上报的实现
-  private queue: EventData[] = [];
+  /** 事件队列 */
+  private queue: EventInfo[] = [];
+  /** 基本信息 */
+  private baseInfo: BaseInfo = {
+    environment: "dev",
+    userId: "",
+    sdkVersion: "1.0.0",
+    deviceInfo: {
+      browser: "chrome",
+      os: "windows",
+      browserVersion: "1.0.0",
+      deviceType: "pc",
+      osVersion: "1.0.0",
+      region: "beijing",
+    },
+  };
+  /** 定时器 */
   private timer: ReturnType<typeof setTimeout> | null = null;
+  /** 配置项 */
   private readonly config: Required<TransportConfig>;
 
   constructor(config: TransportConfig) {
     this.config = {
-      method: "POST",
+      method: "XHR",
       retry: 3,
       batchSize: 5,
       debounceTime: 1000,
@@ -30,23 +54,28 @@ export class Transport {
   }
 
   /**
-   * 暴露给外部的上报方法
+   * 发送数据
+   * @param data 事件信息
    */
-  public send(data: EventData): void {
-    // TODO 存入队列中，等待发送
+  public send(data: EventInfo): void {
     this.queue.push(data);
-    // 直接调用 flush 方法强制发送
-    this.flush();
+    // 如果队列中的数据达到批量上报的条数，调用flush立即上报，未达到批量上报的条数，调用防抖定时器发送函数
+    if (this.queue.length >= this.config.batchSize) {
+      this.flush();
+    } else {
+      this.debounceFlush();
+    }
   }
 
   /**
-   * 强制发送数据
+   * 立即发送数据
    */
   private async flush(): Promise<void> {
-    const transport = [...this.queue];
+    // 从队列中取出待上报的数据
+    const sendData = [...this.queue];
     this.queue = [];
     try {
-      await this.doSend(transport);
+      await this.doSend(sendData);
     } catch (error) {
       // 如果上报失败，记录错误
       console.error("Send failed:", error);
@@ -54,22 +83,30 @@ export class Transport {
   }
 
   /**
-   * 记录需要发送的埋点数据
-   * @param data 需要发送的事件信息
-   * @param flush 是否立即发送
+   * 使用防抖定时器发送数据
    */
-  public emit(data: EventData) {
-    //构建eventlist
+  private debounceFlush(): void {
+    if (this.timer) clearTimeout(this.timer);
+    this.timer = setTimeout(() => {
+      this.flush();
+    }, this.config.debounceTime);
   }
+
   /**
    * 实际发送数据的逻辑
+   * @param eventInfos 事件信息
+   * @param retryCount 重试次数
    */
-  private async doSend(data: EventData[], retryCount = 0): Promise<void> {
+  private async doSend(eventInfos: EventInfo[], retryCount = 0): Promise<void> {
+    const data: RequestData = {
+      baseInfo: this.baseInfo,
+      eventInfo: eventInfos,
+    };
     // 根据配置选择发送方式
     const { method, retry } = this.config;
     try {
       switch (method) {
-        case "POST":
+        case "XHR":
           await this.sendByXHR(data);
           break;
         case "BEACON":
@@ -77,10 +114,10 @@ export class Transport {
           break;
       }
     } catch (error) {
-      // TODO 如果发送失败且未达到重试次数上限，进行重试
+      // 如果发送失败且未达到重试次数上限，进行重试
       if (retryCount < retry) {
         await new Promise((res) => setTimeout(res, 1000 * (retryCount + 1)));
-        return this.doSend(data, retryCount + 1);
+        return this.doSend(eventInfos, retryCount + 1);
       }
       // 达到重试次数上限后，抛出错误
       throw error;
@@ -88,14 +125,16 @@ export class Transport {
   }
 
   /**
-   * 发送数据方式 sendByXHR
+   * 发送数据方式 - sendByXHR
+   * @param data 所有事件信息
+   * @returns
    */
-  private sendByXHR(data: EventData[]): Promise<void> {
+  private sendByXHR(data: RequestData): Promise<void> {
     return new Promise((resolve, reject) => {
       console.log("send by xhr");
 
       const xhr = new XMLHttpRequest();
-      xhr.open(this.config.method, this.config.url);
+      xhr.open("POST", this.config.url);
       xhr.setRequestHeader("Content-Type", "application/json");
 
       xhr.onload = () => {
@@ -115,9 +154,11 @@ export class Transport {
   }
 
   /**
-   * 发送数据方式 sendByBeacon
+   * 发送数据方式 - sendByBeacon
+   * @param data 所有事件信息
+   * @returns
    */
-  private sendByBeacon(data: EventData[]): Promise<void> {
+  private sendByBeacon(data: RequestData): Promise<void> {
     const { url } = this.config;
     return new Promise((resolve, reject) => {
       if (navigator.sendBeacon) {
@@ -135,22 +176,20 @@ export class Transport {
     });
   }
 }
+
 // by ls,创建一个Transport实例
-export let transport: Transport;
-export function initSendData() {
-  _support.sendData = new Transport({
-    url: "62.234.16.19",
-  });
-  transport = _support.sendData;
-}
+
 export let transport: Transport;
 
+/**
+ * 初始化Transport实例
+ */
 export function initTransport() {
   _support.transport = new Transport({
-    url: "https://your-api.com/track", // 这里要修改,initTransport要初始化一个空的transport对象
-    method: "POST", // 或 'BEACON'
+    url: "http://62.234.16.19/track-report", // 这里要修改,initTransport要初始化一个空的transport对象
+    method: "XHR", // 或 'BEACON'
     retry: 3,
-    batchSize: 5,
+    batchSize: 100,
     debounceTime: 1000,
   });
   transport = _support.transport;

@@ -1,41 +1,100 @@
 import type { SDKENVIRONMENT } from "./common";
 type DeviceType = "desktop" | "mobile" | "unknown";
-export interface DeviceInfo {
-  device_id: string;
+
+// export interface DeviceInfo {
+//   device_id: string;
+//   os: string;
+//   os_version: string;
+//   browser: string;
+//   browser_version: string;
+//   device_type: DeviceType;
+//   region: string;
+//   clientHeight: number;
+//   clientWidth: number; // 网页可见区宽度
+//   screenWidth: number;
+//   screenHeight: number; // 显示屏幕的高度
+// }
+
+/**
+ * 设备信息类型声明
+ */
+interface DeviceInfo {
+  /** 操作系统，例：Windows */
   os: string;
-  os_version: string;
+  /** 操作系统版本，例：10 */
+  osVersion: string;
+  /** 浏览器名称，例：Chrome */
   browser: string;
-  browser_version: string;
-  device_type: DeviceType;
+  /** 浏览器版本，例：118.0.0.0 */
+  browserVersion: string;
+  /** 设备类型，例：Desktop */
+  deviceType: string;
+  /** 用户所在地区，例：beijing */
   region: string;
-  clientHeight: number;
-  clientWidth: number; // 网页可见区宽度
-  screenWidth: number;
-  screenHeight: number; // 显示屏幕的高度
 }
-// 定义 page_info 对象的类型
+
+/**
+ * 事件信息中的页面信息类型声明
+ */
 interface PageInfo {
-  page_url: string;
+  /** 当前页面的 URL */
+  pageUrl: string;
+  /** 来源页面的 URL */
   referrer: string;
 }
 
-// 定义 extra_info 对象的类型
+/**
+ * 事件信息中的额外信息类型声明
+ */
 interface ExtraInfo {
+  /** 自定义通用参数，给业务用的参数 */
   common: number;
+  /** 自定义事件信息 */
   event: string;
 }
-// 定义整个数据对象的类型
-export interface EventData {
-  environment: SDKENVIRONMENT; // TODO 待枚举
-  event_name: string;
-  event_time: number;
-  user_id: number;
+
+/**
+ * 事件信息中的单个事件类型声明
+ */
+export interface EventInfo {
+  /** 事件类型，例：click、page */
+  eventType: string;
+  /** 事件名称，例：pageView */
+  eventName: string;
+  /** 事件时间，时间戳，单位为毫秒 */
+  eventTime: number;
+  /** 埋点平台对应事件ID，用于区分不同埋点事件 */
   cid: string;
+  /** 业务ID，用于标识不同的业务 */
   bid: string;
-  device_info: DeviceInfo;
-  page_info: PageInfo;
-  extra_info: ExtraInfo;
-  sdk_version: string;
+  /** 页面信息对象 */
+  pageInfo: PageInfo;
+  /** 额外信息对象 */
+  extraInfo: ExtraInfo;
+}
+
+/**
+ * 基本信息类型声明
+ */
+export interface BaseInfo {
+  /** 环境信息 */
+  environment: "test" | "dev" | "production";
+  /** 用户ID */
+  userId: string;
+  /** 设备信息对象 */
+  deviceInfo: DeviceInfo;
+  /** SDK版本号，例：1.0.0 */
+  sdkVersion: string;
+}
+
+/**
+ * 整个请求数据类型声明
+ */
+export interface RequestData {
+  /** 基本信息对象 */
+  baseInfo: BaseInfo;
+  /** 事件信息数组，包含多个事件对象 */
+  eventInfo: EventInfo[];
 }
 
 interface Pv {
