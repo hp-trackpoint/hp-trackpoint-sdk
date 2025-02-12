@@ -2,7 +2,7 @@ import { AnyFun, AnyObj } from "../optionType";
 import { logError } from "./debug";
 import { isRegExp, isArray, isFunction, isNumber } from "./is";
 import { isInit } from "./global";
-
+import { getIPs } from "./getIps";
 // /**
 //  * 添加事件监听器
 //  * @param target 对象
@@ -268,15 +268,15 @@ export function uuid() {
   return `${guid.slice(0, 8)}-${guid.slice(8, 16)}-${guid.slice(16)}`;
 }
 
-// /**
-//  * 获取cookie中目标name的值
-//  * @param name cookie名
-//  * @returns
-//  */
-// export function getCookieByName(name: string) {
-//   const result = document.cookie.match(new RegExp(`${name}=([^;]+)(;|$)`))
-//   return result ? result[1] : undefined
-// }
+/**
+ * 获取cookie中目标name的值
+ * @param name cookie名
+ * @returns
+ */
+export function getCookieByName(name: string) {
+  const result = document.cookie.match(new RegExp(`${name}=([^;]+)(;|$)`));
+  return result ? result[1] : undefined;
+}
 
 // /**
 //  * 发送数据方式 - navigator.sendBeacon
@@ -649,4 +649,13 @@ export async function getUserLocation() {
       city: "unknown",
     };
   }
+}
+export function getPlatform() {
+  const ua = navigator.userAgent;
+  if (ua.includes("Mac")) return "MacOS";
+  if (ua.includes("Win")) return "Windows";
+  if (ua.includes("Linux")) return "Linux";
+  if (ua.includes("iPhone")) return "iOS";
+  if (ua.includes("Android")) return "Android";
+  return "Unknown";
 }
