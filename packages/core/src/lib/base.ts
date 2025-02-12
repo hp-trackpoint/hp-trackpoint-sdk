@@ -1,17 +1,16 @@
 import { _support } from "../utils/global";
-import { DEVICE_KEY, SDK_VERSION } from "../common";
+import { SDK_VERSION } from "../common";
 import {
   uuid,
   getPlatform,
-  getCookieByName,
   getOSVersion,
   getUserDeviceType,
+  getUserLocation,
   getBrowserInfo,
 } from "../utils";
 import { options } from "./options";
 import { computed } from "../utils/reactivity";
 import type { Ref } from "../utils/reactivity";
-import { _global } from "../utils/global";
 import { DeviceInfo } from "../types";
 import { getIPs } from "../utils/getIps";
 
@@ -31,8 +30,10 @@ export class BaseInfo {
   private sdkUserUuid: string = "unit-test-id";
   private device: DeviceInfo;
   private ip: string = "";
+  private region: string = "";
   constructor() {
     this.initIP();
+    this.initRegion();
     this.device = this.initDevice();
 
     this.base = computed<Base>(() => ({
@@ -49,6 +50,15 @@ export class BaseInfo {
     options.value.sdkUserUuid = this.sdkUserUuid;
     this.reportInit(); // 可添加上报逻辑
   }
+  private async initRegion() {
+    try {
+      const { region } = await getUserLocation();
+      this.region = region || "unknown";
+    } catch (error) {
+      console.error("Failed to get region:", error);
+      this.region = "";
+    }
+  }
   private async initIP() {
     try {
       const ips = (await getIPs()) as any[];
@@ -58,28 +68,25 @@ export class BaseInfo {
       this.ip = "";
     }
   }
-  private initDevice(): DeviceInfo {
-    const { screen } = _global;
-    const { clientWidth, clientHeight } = document.documentElement;
-    const { width, height } = screen;
-    const [browserName, browserVersion] = getBrowserInfo();
-    let deviceId = getCookieByName(DEVICE_KEY);
-    if (!deviceId) {
-      deviceId = `t_${uuid()}`;
-      document.cookie = `${DEVICE_KEY}=${deviceId};path=/;`;
+  private async getUserLocation() {
+    try {
+      const { region } = await getUserLocation();
+      return region;
+    } catch (error) {
+      console.error("Failed to get user location:", error);
+      return "";
     }
+  }
+  private initDevice(): DeviceInfo {
+    this.getUserLocation();
+    const [browserName, browserVersion] = getBrowserInfo();
     return {
-      clientHeight, // 网页可见区高度
-      clientWidth, // 网页可见区宽度
-      device_id: deviceId, // id
-      screenWidth: width, // 显示屏幕的宽度
-      screenHeight: height, // 显示屏幕的高度
       os: getPlatform(), // 操作系统
       os_version: getOSVersion(), // 操作系统版本
       browser: browserName, // 浏览器信息
       browser_version: browserVersion, // 浏览器版本 (需要进一步解析)
       device_type: getUserDeviceType(), // 设备类型
-      region: "unknown", // 地区 (需要进一步解析)
+      region: this.region, // 地区 (需要进一步解析)
     };
   }
 
