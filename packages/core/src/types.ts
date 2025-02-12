@@ -1,4 +1,3 @@
-import type { SDKENVIRONMENT } from "./common";
 type DeviceType = "desktop" | "mobile" | "unknown";
 
 // export interface DeviceInfo {
@@ -18,18 +17,12 @@ type DeviceType = "desktop" | "mobile" | "unknown";
 /**
  * 设备信息类型声明
  */
-interface DeviceInfo {
-  /** 操作系统，例：Windows */
+export interface DeviceInfo {
   os: string;
-  /** 操作系统版本，例：10 */
-  osVersion: string;
-  /** 浏览器名称，例：Chrome */
+  os_version: string;
   browser: string;
-  /** 浏览器版本，例：118.0.0.0 */
-  browserVersion: string;
-  /** 设备类型，例：Desktop */
-  deviceType: string;
-  /** 用户所在地区，例：beijing */
+  browser_version: string;
+  device_type: DeviceType;
   region: string;
 }
 

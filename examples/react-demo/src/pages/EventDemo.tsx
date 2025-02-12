@@ -11,6 +11,7 @@ export default function EventDemo() {
 
   const handleClick = () => {
     setClickCount((prev) => prev + 1);
+    console.log("通用参数测试", window.__webTracing__?.baseInfo);
     transportData();
   };
 
