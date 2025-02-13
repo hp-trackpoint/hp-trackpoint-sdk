@@ -28,6 +28,25 @@ export const transportData = () => {
   });
 };
 
+type ExportMethodsType = {
+  transportData: () => void;
+  setUserUuid: (id: string) => void;
+  getUserUuid: () => string | void;
+  getBaseInfo: () => object | void;
+  getOptions: () => InternalOptions;
+};
+
+// 确保 exportMethods 类型符合定义的结构
+export const exportMethods: ExportMethodsType = {
+  transportData,
+  setUserUuid,
+  getUserUuid,
+  getBaseInfo,
+  getOptions
+};
+
+
+
 /**
  * 设置用户id
  * @param id 用户id
@@ -75,3 +94,5 @@ export function getBaseInfo(): object | void {
 export function getOptions(): InternalOptions {
   return deepCopy(options.value);
 }
+
+export type { ExportMethodsType };
