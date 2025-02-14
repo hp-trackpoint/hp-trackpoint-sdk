@@ -21,6 +21,7 @@ interface Error {
  */
 export type InternalOptions = {
   dsn: string // 上报地址
+  methods: 'XHR' | 'BEACON' // 上报方式
   appName: string // 应用名称
   appCode: string // 应用code
   appVersion: string // 应用版本
@@ -35,6 +36,7 @@ export type InternalOptions = {
  */
 export type InitOptions = {
   dsn: string // 上报地址
+  methods: 'XHR' | 'BEACON' // 上报方式
   appName: string // 应用名称
   appCode?: string // 应用code
   appVersion?: string // 应用版本

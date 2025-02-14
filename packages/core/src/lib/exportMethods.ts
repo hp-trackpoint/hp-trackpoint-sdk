@@ -12,18 +12,18 @@ import { transport } from "./transport";
  */
 export const transportData = () => {
   transport.send({
-    bid: "1",
-    cid: "home_page",
-    eventName: "home",
-    eventTime: Date.now(),
-    eventType: "page",
+    eventType: "click",
+    eventName: "test_click",
+    eventTime: new Date().getTime(),
+    cid: "test_click",
+    bid: "222",
+    pageInfo: {
+      pageUrl: "https://example.com/home",
+      referrer: "https://example.com/login",
+    },
     extraInfo: {
       common: 1,
-      event: "home",
-    },
-    pageInfo: {
-      pageUrl: "http://localhost:3000/",
-      referrer: "http://localhost:3000/",
+      event: "bar",
     },
   });
 };
@@ -42,10 +42,8 @@ export const exportMethods: ExportMethodsType = {
   setUserUuid,
   getUserUuid,
   getBaseInfo,
-  getOptions
+  getOptions,
 };
-
-
 
 /**
  * 设置用户id

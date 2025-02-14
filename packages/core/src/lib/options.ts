@@ -11,6 +11,7 @@ import type { Ref } from '../utils/reactivity'
 
 export class Options implements InternalOptions {
   dsn = '' // 上报地址
+  methods: 'XHR' | 'BEACON' = 'XHR' // 上报方式
   appName = '' // 应用名称
   appCode = '' // 应用code
   appVersion = '' // 应用版本

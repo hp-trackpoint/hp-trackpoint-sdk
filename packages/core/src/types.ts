@@ -1,28 +1,14 @@
 type DeviceType = "desktop" | "mobile" | "unknown";
 
-// export interface DeviceInfo {
-//   device_id: string;
-//   os: string;
-//   os_version: string;
-//   browser: string;
-//   browser_version: string;
-//   device_type: DeviceType;
-//   region: string;
-//   clientHeight: number;
-//   clientWidth: number; // 网页可见区宽度
-//   screenWidth: number;
-//   screenHeight: number; // 显示屏幕的高度
-// }
-
 /**
  * 设备信息类型声明
  */
 export interface DeviceInfo {
   os: string;
-  os_version: string;
+  osVersion: string;
   browser: string;
-  browser_version: string;
-  device_type: DeviceType;
+  browserVersion: string;
+  deviceType: DeviceType;
   region: string;
 }
 

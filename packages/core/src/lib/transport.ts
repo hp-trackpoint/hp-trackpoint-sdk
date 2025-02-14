@@ -33,7 +33,7 @@ export class Transport {
       browser: "chrome",
       os: "windows",
       browserVersion: "1.0.0",
-      deviceType: "pc",
+      deviceType: "desktop",
       osVersion: "1.0.0",
       region: "beijing",
     },
@@ -178,7 +178,6 @@ export class Transport {
 }
 
 // by ls,创建一个Transport实例
-
 export let transport: Transport;
 
 /**
@@ -186,10 +185,10 @@ export let transport: Transport;
  */
 export function initTransport() {
   _support.transport = new Transport({
-    url: "http://62.234.16.19/track-report", // 这里要修改,initTransport要初始化一个空的transport对象
-    method: "XHR", // 或 'BEACON'
+    url: _support.options.value.dsn, // 这里要修改,initTransport要初始化一个空的transport对象
+    method: _support.options.value.methods, // 或 'BEACON'
     retry: 3,
-    batchSize: 100,
+    batchSize: 10,
     debounceTime: 1000,
   });
   transport = _support.transport;
