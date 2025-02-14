@@ -1,13 +1,7 @@
-import React from 'react';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { transportData } from "../../../../packages/core/src/lib/exportMethods";
-import { initTransport } from "../../../../packages/core/src/lib/transport";
 
 export default function EventDemo() {
-  useEffect(() => {
-    initTransport();
-  }, []);
-
   const [clickCount, setClickCount] = useState(0);
 
   const handleClick = () => {

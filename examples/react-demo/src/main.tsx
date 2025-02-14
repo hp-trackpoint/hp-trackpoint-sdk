@@ -6,11 +6,12 @@ import { router } from "./router.tsx";
 import sdkCore from "../../../packages/core/src/index.ts";
 
 sdkCore.init({
-  dsn:"http://localhost:3000/collect",
-  appName:"track_demo",
-  debug:true,
-  error:true
-})
+  dsn: "http://62.234.16.19/track-report",
+  methods: "XHR",
+  appName: "track_demo",
+  debug: true,
+  error: true,
+});
 sdkCore.logError("logerrorerrorerrorerror");
 sdkCore.exportMethods.transportData();
 
