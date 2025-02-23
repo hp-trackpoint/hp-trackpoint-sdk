@@ -15,7 +15,7 @@ export const transportData = () => {
     eventType: "click",
     eventName: "test_click",
     eventTime: new Date().getTime(),
-    cid: "test_click",
+    cid: "home_page",
     bid: "222",
     pageInfo: {
       pageUrl: "https://example.com/home",
