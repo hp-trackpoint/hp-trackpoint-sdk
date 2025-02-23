@@ -1,5 +1,5 @@
 import { EventInfo } from "@tracking-sdk/core/src/types";
-import { transport } from "@tracking-sdk/core/src/lib/transport";
+import { reportData } from "../utils";
 
 let startTime: number;
 let currentPath: string;
@@ -67,7 +67,7 @@ export function initPVMonitor(): void {
       ...(eventName === "pv_leave" && { startTime: currentTime - startTime }),
     };
     console.log(`${eventName} Data:`, pvData);
-    transport.send(pvData);
+    reportData(pvData);
   }
 
   // 路由发生变化

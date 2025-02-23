@@ -20,7 +20,7 @@ sdkCore.use(new BehaviorMonitoringPlugin({
   enableClick: true,
   enablePV: true,
   enableRoute: true,
-  ignoreUrls:['/api', '/health'],
+  ignoreUrls:['/event', '/health'],
 }));
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

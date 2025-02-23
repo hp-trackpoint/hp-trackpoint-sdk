@@ -1,7 +1,6 @@
-import { transport } from "@tracking-sdk/core/src/lib/transport";
 import { EventInfo } from "@tracking-sdk/core/src/types";
 
-import { getXPath } from "../utils";
+import { getXPath, reportData } from "../utils";
 
 export const initClickMonitor = (): void => {
   document.addEventListener("click", (event) => {
@@ -31,6 +30,6 @@ export const initClickMonitor = (): void => {
       },
     };
 
-    transport.send(clickData);
+    reportData(clickData);
   });
 };

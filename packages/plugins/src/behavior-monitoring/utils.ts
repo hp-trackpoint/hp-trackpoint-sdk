@@ -1,3 +1,9 @@
+import { EventInfo } from "@tracking-sdk/core/src/types";
+import { transport } from "@tracking-sdk/core/src/lib/transport";
+
+// 忽略的url列表
+let globalIgnoreUrls: string[] = [];
+
 /**
  * 获取元素的XPath
  * @param element HTML元素
@@ -51,4 +57,51 @@ export function getXPath(element: HTMLElement): string {
 
   // 最终保持的路径格式为：/html/body/div[1]/div[2]/div[3]/span[1]
   return "/" + paths.join("/");
+}
+
+/**
+ * 检查URL是否需要被忽略
+ * @param url 当前url
+ * @param ignoreUrls 忽略的url列表
+ * @returns 布尔值 是否忽略当前url
+ */
+export function shouldIgnoreUrl(url: string, ignoreUrls: string[]): boolean {
+  if (!ignoreUrls?.length) return false;
+
+  return ignoreUrls.some((ignorePattern) => {
+    // 支持正则表达式字符串
+    if (ignorePattern.startsWith("/") && ignorePattern.endsWith("/")) {
+      const regex = new RegExp(ignorePattern.slice(1, -1));
+      return regex.test(url);
+    }
+    // 支持通配符 *
+    if (ignorePattern.includes("*")) {
+      const regexPattern = ignorePattern
+        .replace(/[.+?^${}()|[\]\\]/g, "\\$&") // 转义特殊字符
+        .replace(/\*/g, ".*"); // 将 * 转换为 .*
+      const regex = new RegExp(`^${regexPattern}$`);
+      return regex.test(url);
+    }
+    // 普通字符串匹配
+    return url.includes(ignorePattern);
+  });
+}
+
+export function setIgnoreUrls(ignoreUrls: string[]): void {
+  globalIgnoreUrls = ignoreUrls;
+}
+
+/**
+ * 上报数据（过滤忽略的url）
+ * @param eventData 事件数据
+ * @param ignoreUrls 忽略的url列表
+ * @returns void
+ */
+export function reportData(eventData: EventInfo): void {
+  // 检查当前URL是否需要被忽略
+  if (shouldIgnoreUrl(window.location.href, globalIgnoreUrls)) {
+    return;
+  }
+  // 上报数据
+  transport.send(eventData);
 }

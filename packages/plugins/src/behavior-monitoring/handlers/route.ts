@@ -1,5 +1,5 @@
-import { transport } from "@tracking-sdk/core/src/lib/transport";
 import { EventInfo } from "@tracking-sdk/core/src/types";
+import { reportData } from "../utils";
 
 let lastPageUrl: string;
 
@@ -28,7 +28,7 @@ export function initRouteMonitor(): void {
       to: currentUrl,
     };
 
-    transport.send(routeData);
+    reportData(routeData);
     lastPageUrl = currentUrl;
   };
 

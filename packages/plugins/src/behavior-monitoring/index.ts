@@ -4,6 +4,7 @@ import type { BehaviorMonitoringOptions } from "./types";
 import { initClickMonitor } from "./handlers/click";
 import { initPVMonitor } from "./handlers/pv";
 import { initRouteMonitor } from "./handlers/route";
+import { setIgnoreUrls } from "./utils";
 
 export class BehaviorMonitoringPlugin implements Plugin {
   name = "BehaviorMonitor";
@@ -15,6 +16,7 @@ export class BehaviorMonitoringPlugin implements Plugin {
       enableClick: true,
       enablePV: true,
       enableRoute: true,
+      ignoreUrls: [""],
       ...options,
     };
   }
@@ -24,6 +26,8 @@ export class BehaviorMonitoringPlugin implements Plugin {
    */
   install(core: any): void {
     this.core = core;
+    // 设置忽略的url列表
+    setIgnoreUrls(this.options.ignoreUrls || []);
     // 初始化各个监控模块
     this.initializeBehaviorMonitoring();
   }
