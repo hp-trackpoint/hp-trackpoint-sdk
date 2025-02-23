@@ -1,6 +1,7 @@
 import type { Plugin } from "core/src";
 import type { BehaviorMonitoringOptions } from "./types";
 import { initClickMonitor } from "./handlers/click";
+import { initPVMonitor } from "./handlers/pv";
 
 export class BehaviorMonitoringPlugin implements Plugin {
   name = "BehaviorMonitor";
@@ -32,6 +33,9 @@ export class BehaviorMonitoringPlugin implements Plugin {
     // 初始化点击监控
     if (this.options.enableClick) {
       initClickMonitor();
+    }
+    if (this.options.enablePV) {
+      initPVMonitor();
     }
   }
 }
