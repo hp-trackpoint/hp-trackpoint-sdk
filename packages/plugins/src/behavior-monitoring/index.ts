@@ -1,7 +1,9 @@
-import type { Plugin } from "core/src";
+import type { Plugin } from "@tracking-sdk/core/src";
+
 import type { BehaviorMonitoringOptions } from "./types";
 import { initClickMonitor } from "./handlers/click";
 import { initPVMonitor } from "./handlers/pv";
+import { initRouteMonitor } from "./handlers/route";
 
 export class BehaviorMonitoringPlugin implements Plugin {
   name = "BehaviorMonitor";
@@ -36,6 +38,9 @@ export class BehaviorMonitoringPlugin implements Plugin {
     }
     if (this.options.enablePV) {
       initPVMonitor();
+    }
+    if (this.options.enableRoute) {
+      initRouteMonitor();
     }
   }
 }
