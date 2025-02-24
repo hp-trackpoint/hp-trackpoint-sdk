@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { transportData } from "../../../../packages/core/src/lib/exportMethods";
+import { transportData } from "@tracking-sdk/core";
 
 export default function EventDemo() {
   const [clickCount, setClickCount] = useState(0);
