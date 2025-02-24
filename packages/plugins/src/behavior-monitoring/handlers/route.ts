@@ -16,7 +16,7 @@ export function initRouteMonitor(): void {
       eventTime: Date.now(),
       pageInfo: {
         pageUrl: currentUrl,
-        referrer: document.referrer,
+        referrer: lastPageUrl,
       },
       bid: "",
       cid: "home_page",
@@ -24,8 +24,6 @@ export function initRouteMonitor(): void {
         common: 1,
         event: "",
       },
-      from: lastPageUrl,
-      to: currentUrl,
     };
 
     reportData(routeData);

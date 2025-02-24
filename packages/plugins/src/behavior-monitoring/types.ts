@@ -45,15 +45,5 @@ export interface PVEventData {
   stayTime?: number;
 }
 
-/**
- * 路由变化数据类型
- */
-export interface RouteEventData {
-  /** 路由来源 */
-  from: string;
-  /** 路由目标 */
-  to: string;
-}
-
 // 所有事件数据类型
-export type EventData = PVEventData | ClickEventData | RouteEventData;
+export type EventData = PVEventData | ClickEventData;
