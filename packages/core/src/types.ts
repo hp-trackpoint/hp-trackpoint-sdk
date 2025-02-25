@@ -50,6 +50,35 @@ export interface EventInfo {
   pageInfo: PageInfo;
   /** 额外信息对象 */
   extraInfo: ExtraInfo;
+
+  // 点击事件采集，当eventType为click时，需要传递以下参数
+  /** 点击目标 */
+  target?: {
+    /** 标签名 */
+    tagName: string;
+    /** 类名 */
+    className: string;
+    /** ID */
+    id: string;
+    /** 文本内容 */
+    innerText: string;
+    /** xpath路径 */
+    xpath: string;
+  };
+
+  // 页面访问事件采集，当eventType为page时，需要传递以下参数
+  /** 访问开始时间 */
+  startTime?: number;
+  /** 访问来源 */
+  referrer?: string;
+  /** 页面停留时间 */
+  stayTime?: number;
+
+  // 路由变化事件采集，当eventType为route时，需要传递以下参数
+  /** 路由来源 */
+  from?: string;
+  /** 路由目标 */
+  to?: string;
 }
 
 /**

@@ -57,3 +57,4 @@ class SDK {
   const sdkCore = new SDK()
 
 export { Plugin,sdkCore as default, InitOptions, logError,  exportMethods, _options as options }
+export * from './lib/exportMethods';

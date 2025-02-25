@@ -54,6 +54,9 @@ importers:
       '@tracking-sdk/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@tracking-sdk/plugins':
+        specifier: workspace:*
+        version: link:../../packages/plugins
       react:
         specifier: ^18.2.0
         version: 18.3.1
