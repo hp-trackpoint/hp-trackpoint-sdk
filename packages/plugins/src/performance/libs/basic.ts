@@ -2,23 +2,18 @@
 import { onFCP, onLCP } from "web-vitals";
 import { transport } from "@tracking-sdk/core/src/lib/transport";
 import { EventInfo } from "@tracking-sdk/core/src/types";
+import { AnyFun } from "core/src/optionType";
 
-interface BasicType {
-  fcp: number;
+function getWebVitals(callback: AnyFun): void {
+  onLCP((res) => {
+    callback(res);
+  });
+  onFCP((res) => {
+    callback(res);
+  });
 }
-
 export default function basicPerMonitor(): void {
-  window.addEventListener("load", () => setTimeout(sendData, 1000));
-  const res = {
-    fcp: 0,
-    lcp: 0,
-  };
-  onFCP((metric) => {
-    res.fcp = metric.value;
-  });
-  onLCP((metric) => {
-    res.lcp = metric.value;
-  });
+  window.addEventListener("load", () => setTimeout(sendData, 5000));
   function sendData() {
     const currentTime = Date.now();
     const basicPerData: EventInfo = {
@@ -27,7 +22,6 @@ export default function basicPerMonitor(): void {
       eventTime: currentTime,
       cid: "home_page",
       bid: "",
-      extra: {},
       extraInfo: {
         common: 1,
         event: "",
@@ -37,7 +31,18 @@ export default function basicPerMonitor(): void {
         referrer: document.referrer,
       },
     };
-    console.log("performance_basic", basicPerData);
-    transport.send(basicPerData);
+    getWebVitals((res: any) => {
+      // name指标名称、rating 评级、value数值
+      const { name, rating, value } = res;
+      console.log("performance_basic", name, rating, value);
+      transport.send({
+        ...basicPerData,
+        extra: {
+          perName: name,
+          rating: rating,
+          perValue: value,
+        },
+      });
+    });
   }
 }
