@@ -23,6 +23,7 @@ export default [
       "@typescript-eslint/no-unnecessary-try-catch": "off",
       "@typescript-eslint/no-explicit-any": "off",
       "no-unused-expressions": "off",
+      "@typescript/eslint/no-unused-expressions": "warn",
     },
   },
 ];

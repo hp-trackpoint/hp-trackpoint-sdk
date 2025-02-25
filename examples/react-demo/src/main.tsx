@@ -4,7 +4,10 @@ import "./index.css";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./router.tsx";
 import sdkCore from "@tracking-sdk/core";
-import { BehaviorMonitoringPlugin } from "@tracking-sdk/plugins";
+import {
+  BehaviorMonitoringPlugin,
+  PerformancePlugin,
+} from "@tracking-sdk/plugins";
 
 sdkCore.init({
   dsn: "http://62.234.16.19/track-report",
@@ -22,7 +25,7 @@ sdkCore.use(
     ignoreUrls: ["/event", "/health"],
   })
 );
-
+sdkCore.use(new PerformancePlugin());
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <RouterProvider router={router} />

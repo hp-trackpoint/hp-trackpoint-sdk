@@ -54,6 +54,9 @@ importers:
       '@tracking-sdk/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@tracking-sdk/performance':
+        specifier: workspace:*
+        version: link:../../packages/plugins/src/performance
       '@tracking-sdk/plugins':
         specifier: workspace:*
         version: link:../../packages/plugins
@@ -112,6 +115,12 @@ importers:
       '@tracking-sdk/core':
         specifier: workspace:*
         version: link:../core
+
+  packages/plugins/src/performance:
+    dependencies:
+      web-vitals:
+        specifier: ^3.1.0
+        version: 3.5.2
 
 packages:
 
@@ -1900,6 +1909,9 @@ packages:
         optional: true
       yaml:
         optional: true
+
+  web-vitals@3.5.2:
+    resolution: {integrity: sha512-c0rhqNcHXRkY/ogGDJQxZ9Im9D19hDihbzSQJrsioex+KnFgmMzBiy57Z1EjkhX/+OjyBpclDCzz2ITtjokFmg==}
 
   which-boxed-primitive@1.1.1:
     resolution: {integrity: sha512-TbX3mj8n0odCBFVlY8AxkqcHASw3L60jIuF8jFP78az3C2YhmGvqbHBpAjTRH2/xqYunrJ9g1jSyjCjpoWzIAA==}
@@ -3913,6 +3925,8 @@ snapshots:
       '@types/node': 22.13.1
       fsevents: 2.3.3
       jiti: 2.4.2
+
+  web-vitals@3.5.2: {}
 
   which-boxed-primitive@1.1.1:
     dependencies:
