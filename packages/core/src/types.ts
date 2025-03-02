@@ -50,7 +50,7 @@ export interface EventInfo {
   pageInfo: PageInfo;
   /** 额外信息对象 */
   extraInfo: ExtraInfo;
-
+  extra?: AnyObj;
   // 点击事件采集，当eventType为click时，需要传递以下参数
   /** 点击目标 */
   target?: {

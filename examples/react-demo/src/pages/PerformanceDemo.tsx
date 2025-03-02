@@ -1,13 +1,9 @@
-import React from 'react';
-import { useEffect, useState } from "react";
+import React from "react";
+import { useState } from "react";
 
 export default function PerformanceDemo() {
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<any>(null);
-
-  useEffect(() => {
-    console.log("");
-  }, []);
+  const [data, setData] = useState(null);
 
   const loadData = async () => {
     setLoading(true);

@@ -1,5 +1,6 @@
 packages:
   # packages/ 直接子目录中的所有包
-  - 'packages/*'
-  # 添加 examples 目录
-  - 'examples/*'
+  - "packages/*"
+  - "packages/plugins/src/*"
+  # plugins(暂时的三个)添加进monorepo管理
+  - "examples/*"

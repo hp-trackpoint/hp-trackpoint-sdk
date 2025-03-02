@@ -1,5 +1,5 @@
 // 数据上报相关的代码
-import { BaseInfo, RequestData, type EventInfo } from "../types";
+import { BaseInfo, RequestData, EventInfo } from "../types";
 import { _support } from "../utils/global";
 
 /**
@@ -44,6 +44,18 @@ export class Transport {
   private readonly config: Required<TransportConfig>;
 
   constructor(config: TransportConfig) {
+    this.baseInfo = {
+      ..._support.baseInfo.base.value,
+      deviceInfo: {
+        browser: "chrome",
+        os: "windows",
+        browserVersion: "1.0.0",
+        deviceType: "desktop",
+        osVersion: "1.0.0",
+        region: "beijing",
+      },
+    };
+    console.log(_support.baseInfo, "_support.baseInfo");
     this.config = {
       method: "XHR",
       retry: 3,

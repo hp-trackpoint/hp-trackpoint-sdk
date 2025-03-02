@@ -15,36 +15,34 @@ import { DeviceInfo } from "../types";
 import { getIPs } from "../utils/getIps";
 
 interface Base extends DeviceInfo {
-  user_id: string;
-  sdkUserUuid: string;
-  appName: string;
-  appCode: string;
-  pageId: string;
+  userId: string;
+  environment: "test" | "dev" | "production";
   sdkVersion: string;
-  ip: string;
 }
 
 export class BaseInfo {
   public base: Ref<Base>;
   public pageId: string = uuid();
   private sdkUserUuid: string = "unit-test-id";
-  private device: DeviceInfo;
-  private ip: string = "";
-  private region: string = "";
+  private device: DeviceInfo = {
+    os: "",
+    osVersion: "",
+    browser: "",
+    browserVersion: "",
+    deviceType: "unknown",
+    region: "pendding", // 给个初始值
+  };
+  private ip: string = ""; //暂时仅用于获取
   constructor() {
-    this.initIP();
+    this.initIP(); // 当前公参没用到IP，可考虑删去
     this.initRegion();
     this.device = this.initDevice();
 
     this.base = computed<Base>(() => ({
       ...this.device,
-      user_id: options.value.user_id,
-      sdkUserUuid: this.sdkUserUuid,
-      appName: options.value.appName,
-      appCode: options.value.appCode,
-      pageId: this.pageId,
+      environment: "test",
+      userId: uuid(),
       sdkVersion: SDK_VERSION,
-      ip: this.ip,
     }));
 
     options.value.sdkUserUuid = this.sdkUserUuid;
@@ -53,10 +51,10 @@ export class BaseInfo {
   private async initRegion() {
     try {
       const { region } = await getUserLocation();
-      this.region = region || "unknown";
+      this.device.region = region || "unknown";
     } catch (error) {
       console.error("Failed to get region:", error);
-      this.region = "";
+      this.device.region = "";
     }
   }
   private async initIP() {
@@ -68,25 +66,16 @@ export class BaseInfo {
       this.ip = "";
     }
   }
-  private async getUserLocation() {
-    try {
-      const { region } = await getUserLocation();
-      return region;
-    } catch (error) {
-      console.error("Failed to get user location:", error);
-      return "";
-    }
-  }
   private initDevice(): DeviceInfo {
-    this.getUserLocation();
+    this.initRegion();
     const [browserName, browserVersion] = getBrowserInfo();
     return {
       os: getPlatform(), // 操作系统
-      os_version: getOSVersion(), // 操作系统版本
+      osVersion: getOSVersion(), // 操作系统版本
       browser: browserName, // 浏览器信息
-      browser_version: browserVersion, // 浏览器版本 (需要进一步解析)
-      device_type: getUserDeviceType(), // 设备类型
-      region: this.region, // 地区 (需要进一步解析)
+      browserVersion: browserVersion, // 浏览器版本 (需要进一步解析)
+      deviceType: getUserDeviceType(), // 设备类型
+      region: this.device.region ?? "unknown", // 地区 (需要进一步解析)
     };
   }
 

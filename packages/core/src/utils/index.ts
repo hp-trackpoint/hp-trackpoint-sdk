@@ -659,3 +659,14 @@ export function getPlatform() {
   if (ua.includes("Android")) return "Android";
   return "Unknown";
 }
+export const formatDecimal = (num: number, decimal: number) => {
+  if (!isFinite(num) || isNaN(num)) {
+    return num; // 对于 NaN 和 Infinity 直接返回原始数值
+  }
+
+  if (!Number.isInteger(decimal) || decimal < 0) {
+    return num; // 如果小数位数无效，返回原始数值
+  }
+
+  return parseFloat(num.toFixed(decimal));
+};
