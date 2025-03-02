@@ -7,15 +7,20 @@ import sdkCore from "@tracking-sdk/core";
 import {
   BehaviorMonitoringPlugin,
   PerformancePlugin,
+  errorMonitoringPlugin
 } from "@tracking-sdk/plugins";
 
 sdkCore.init({
   dsn: "http://62.234.16.19/track-report",
   methods: "XHR",
   appName: "track_demo",
+  // plugins:[errorMonitoringPlugin],
   debug: true,
   error: true,
 });
+
+sdkCore.exportMethods.transportData();
+
 
 sdkCore.use(
   new BehaviorMonitoringPlugin({
@@ -26,6 +31,7 @@ sdkCore.use(
   })
 );
 sdkCore.use(new PerformancePlugin());
+sdkCore.use(errorMonitoringPlugin);
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <RouterProvider router={router} />

@@ -70,7 +70,7 @@ export class Transport {
    * @param data 事件信息
    */
   public send(data: EventInfo): void {
-    this.queue.push(data);
+    this.queue.push(data );
     // 如果队列中的数据达到批量上报的条数，调用flush立即上报，未达到批量上报的条数，调用防抖定时器发送函数
     if (this.queue.length >= this.config.batchSize) {
       this.flush();
@@ -143,9 +143,10 @@ export class Transport {
    */
   private sendByXHR(data: RequestData): Promise<void> {
     return new Promise((resolve, reject) => {
-      console.log("send by xhr");
+      console.log("send by xhr",data);
 
       const xhr = new XMLHttpRequest();
+      console.log("Request URL:", this.config.url);
       xhr.open("POST", this.config.url);
       xhr.setRequestHeader("Content-Type", "application/json");
 

@@ -10,20 +10,22 @@ import { transport } from "./transport";
  * 测试发送数据
  * 直接在项目中调用此方法实现数据上报
  */
-export const transportData = () => {
+export const transportData = (
+    eventName:string = "default_event",
+    eventTime:number = Date.now(),
+    eventType:string = "default_type",
+    extraInfo: { common: number; event: string } = { common: 1, event: "default_event" }
+  ) => {
   transport.send({
-    eventType: "click",
-    eventName: "test_click",
-    eventTime: new Date().getTime(),
-    cid: "home_page",
     bid: "222",
+    cid: "home_page",
+    eventName,
+    eventTime,
+    eventType,
+    extraInfo,
     pageInfo: {
-      pageUrl: "https://example.com/home",
-      referrer: "https://example.com/login",
-    },
-    extraInfo: {
-      common: 1,
-      event: "bar",
+      pageUrl: "http://localhost:3000/",
+      referrer: "http://localhost:3000/",
     },
   });
 };

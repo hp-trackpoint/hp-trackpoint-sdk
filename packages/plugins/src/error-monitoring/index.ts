@@ -1,4 +1,7 @@
-// 错误监控插件
-export class ErrorMonitor {
-  // ... 错误监控实现
-}
+import type { Plugin } from "@tracking-sdk/core/src";
+import { ErrorMonitoringPlugin } from "./errorMonitorPlugin";
+
+export * from "./type";
+export * from "./utils/stackParser";
+
+export const errorMonitoringPlugin: Plugin = new ErrorMonitoringPlugin();

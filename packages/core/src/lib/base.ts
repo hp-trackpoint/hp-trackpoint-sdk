@@ -59,7 +59,8 @@ export class BaseInfo {
   }
   private async initIP() {
     try {
-      const ips = (await getIPs()) as any[];
+      const ips = await getIPs().IPv4(2000);
+      // const ips = (await getIPs()) as any[];
       this.ip = ips[0] || "";
     } catch (error) {
       console.error("Failed to get IP:", error);
